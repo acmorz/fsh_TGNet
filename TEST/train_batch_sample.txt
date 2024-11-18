@@ -1,0 +1,14 @@
+Batch 0 Size: 4
+
+Sample 0:
+feat
+
+Sample 1:
+gt_seg_label
+
+Sample 2:
+aug_obj
+
+Sample 3:
+mesh_path
+
