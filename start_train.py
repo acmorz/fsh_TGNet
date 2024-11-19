@@ -1,5 +1,8 @@
 from runner import runner
 from train_configs import train_config_maker
+import os
+import torch
+import torch.distributed as dist
 import argparse
 
 parser = argparse.ArgumentParser(description='Inference models') #  创建一个解析器对象 parser，该解析器用于解析命令行参数。
@@ -9,9 +12,11 @@ parser.add_argument('--experiment_name', default="tsegnet_0620", type=str, help 
 parser.add_argument('--input_data_dir_path', default="data_preprocessed_path", type=str, help = "input data dir path.")
 parser.add_argument('--train_data_split_txt_path', default="base_name_train_fold.txt", type=str, help = "train cases list file path.")
 parser.add_argument('--val_data_split_txt_path', default="base_name_val_fold.txt", type=str, help = "val cases list file path.")
+parser.add_argument('--gpu_id', type=str, default='0,1,2,3', help="Comma-separated list of GPU IDs")
 args = parser.parse_args()
 
 #使用 parse_args() 方法解析命令行参数。解析后的参数存储在 args 对象中，可以通过 args.<参数名> 的方式访问
+
 
 config = train_config_maker.get_train_config(
     args.config_path,
@@ -19,7 +24,19 @@ config = train_config_maker.get_train_config(
     args.input_data_dir_path,
     args.train_data_split_txt_path,
     args.val_data_split_txt_path,
+
 )
+
+def setup_distributed(gpu_id):
+    os.environ['CUDA_VISIBLE_DEVICES'] = gpu_id
+    dist.init_process_group(backend="nccl")  # 初始化分布式进程组
+    local_rank = dist.get_rank()  # 获取当前进程的 rank
+    torch.cuda.set_device(local_rank)  # 将当前进程绑定到对应 GPU
+    return local_rank
+
+
+# 初始化分布式环境
+local_rank = setup_distributed(args.gpu_id)
 
 #get_train_config 函数使用这些参数生成训练配置 config，配置内容可能包括超参数、数据集路径和训练设置等。
 
@@ -55,4 +72,4 @@ elif args.model_name == "tgnet_bdl":
 #from pprint import pprint
 #pprint(config)
 
-# runner(config, model)
+# runner(config, model, local_rank)
