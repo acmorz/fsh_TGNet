@@ -5,8 +5,11 @@ from torch.optim.lr_scheduler import ExponentialLR
 import os
 import copy
 from external_libs.scheduler import build_scheduler_from_cfg
-class BaseModel(metaclass=ABCMeta):
+import torch.nn as nn
+
+class BaseModel(nn.Module, metaclass=ABCMeta):
     def __init__(self, config, module):
+        super(BaseModel, self).__init__()
         self.config = config
 
         self.module = module(config)
