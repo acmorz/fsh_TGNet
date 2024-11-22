@@ -27,16 +27,21 @@ config = train_config_maker.get_train_config(
 
 )
 
-def setup_distributed(gpu_id):
-    os.environ['CUDA_VISIBLE_DEVICES'] = gpu_id
-    dist.init_process_group(backend="nccl")  # 初始化分布式进程组
-    local_rank = dist.get_rank()  # 获取当前进程的 rank
+# def setup_distributed(gpu_id):
+#     os.environ['CUDA_VISIBLE_DEVICES'] = gpu_id
+#     dist.init_process_group(backend="nccl")  # 初始化分布式进程组
+#     local_rank = dist.get_rank()  # 获取当前进程的 rank
+#     torch.cuda.set_device(local_rank)  # 将当前进程绑定到对应 GPU
+#     return local_rank
+
+def setup_distributed(gpu_ids):
+    gpu_list = [int(gpu.strip()) for gpu in gpu_ids.split(',')]
+    os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(map(str, gpu_list))
+    world_size = len(gpu_list)  # 获取总 GPU 数量
+    torch.distributed.init_process_group(backend="nccl", init_method="env://")  # 初始化分布式进程组
+    local_rank = torch.distributed.get_rank()  # 当前进程的 rank
     torch.cuda.set_device(local_rank)  # 将当前进程绑定到对应 GPU
-    return local_rank
-
-
-# 初始化分布式环境
-local_rank = setup_distributed(args.gpu_id)
+    return local_rank, world_size
 
 #get_train_config 函数使用这些参数生成训练配置 config，配置内容可能包括超参数、数据集路径和训练设置等。
 
@@ -69,7 +74,14 @@ elif args.model_name == "tgnet_bdl":
     from models.modules.grouping_network_module import GroupingNetworkModule
     model = BdlGroupingNetworkModel(config, GroupingNetworkModule)
 
+
+# 初始化分布式环境
+local_rank, world_size = setup_distributed(args.gpu_id)
+
 #from pprint import pprint
 #pprint(config)
+model = model.cuda()
+model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], output_device=local_rank)
 
-# runner(config, model, local_rank)
+
+runner(config, model, local_rank, world_size)

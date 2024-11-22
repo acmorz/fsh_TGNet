@@ -1,6 +1,6 @@
 from trainer import Trainer
 from generator import DentalModelGenerator
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, DistributedSampler
 import os
 import torch
 
@@ -23,6 +23,7 @@ def get_mesh_path(basename):
     file_name = basename.split("_")[0]+"_"+basename.split("_")[1]+".obj"
     return os.path.join("all_datas", "chl", "3D_scans_per_patient_obj_files", f"{case_name}", file_name)
 
+# 源码 数据集划分
 def get_generator_set(config, is_test=False):
     # 分别用于训练和验证数据集的加载
     if not is_test:
@@ -51,6 +52,41 @@ def get_generator_set(config, is_test=False):
             collate_fn= collate_fn
         )
         return [point_loader, val_point_loader]
+    
+
+def get_generator_set(config, rank, world_size, is_test=False):
+    if not is_test:
+        train_dataset = DentalModelGenerator(
+            config["input_data_dir_path"],
+            aug_obj_str=config["aug_obj_str"],
+            split_with_txt_path=config["train_data_split_txt_path"]
+        )
+        train_sampler = DistributedSampler(
+            train_dataset, num_replicas=world_size, rank=rank, shuffle=True
+        )
+        train_loader = DataLoader(
+            train_dataset,
+            sampler=train_sampler,
+            batch_size=config["train_batch_size"],
+            collate_fn=collate_fn
+        )
+
+        val_dataset = DentalModelGenerator(
+            config["input_data_dir_path"],
+            aug_obj_str=None,
+            split_with_txt_path=config["val_data_split_txt_path"]
+        )
+        val_sampler = DistributedSampler(
+            val_dataset, num_replicas=world_size, rank=rank, shuffle=False
+        )
+        val_loader = DataLoader(
+            val_dataset,
+            sampler=val_sampler,
+            batch_size=config["val_batch_size"],
+            collate_fn=collate_fn
+        )
+
+        return [train_loader, val_loader]
 
 def save_full_batch_content(train_loader):
     # 创建 TEST 文件夹（如果不存在）
@@ -79,17 +115,23 @@ def save_full_batch_content(train_loader):
             break
 
 
-def runner(config, model):
-    gen_set = [get_generator_set(config["generator"], False)] # 获取训练和验证数据加载器（gen_set） 应该是把数据集划分好了
-    print("train_set", len(gen_set[0][0]))
-    print("validation_set", len(gen_set[0][1])) # 输出训练集和验证集的数据量，使用 print() 检查数据集大小
+def runner(config, model, rank, world_size):
+    train_loader, val_loader = get_generator_set(config["generator"], rank, world_size, is_test=False)
+    print(f"Rank: {rank}, World size: {world_size}")
 
-    train_loader = gen_set[0][0]  # 训练数据加载器
-    print(len(train_loader))
+    print(f"Rank {rank}: train_set size = {len(train_loader.dataset)}")
+    print(f"Rank {rank}: validation_set size = {len(val_loader.dataset)}")
+    # 验证 train_loader 的实际数据量
+    print(f"Rank {rank}: train_set actual size = {len(train_loader.sampler)}")
+    print(f"Rank {rank}: validation_set actual size = {len(val_loader.sampler)}")
 
-    # save_full_batch_content(train_loader)
 
-    
-    
-    #trainner = Trainer(config=config, model = model, gen_set=gen_set) # Trainer 使用 config、model 和 gen_set（数据加载器）进行初始化
-    #trainner.run()
+
+
+    # 源码
+    # gen_set = [get_generator_set(config["generator"], False)] # 获取训练和验证数据加载器（gen_set） 应该是把数据集划分好了
+    # print("train_set", len(gen_set[0][0]))
+    # print("validation_set", len(gen_set[0][1])) # 输出训练集和验证集的数据量，使用 print() 检查数据集大小
+
+    trainner = Trainer(config=config, model = model, gen_set=[train_loader, val_loader]) # Trainer 使用 config、model 和 gen_set（数据加载器）进行初始化
+    trainner.run()
