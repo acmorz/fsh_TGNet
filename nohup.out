@@ -39,3 +39,147 @@ Traceback (most recent call last):
   File "/mnt/home/stu2/.conda/envs/TGNet/lib/python3.9/site-packages/torch/nn/modules/module.py", line 463, in <lambda>
     return self._apply(lambda t: t.cuda(device))
 KeyboardInterrupt
+[INFO] 2024-12-04 21:41:39,351 run: Running torch.distributed.run with args: ['/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/run.py', '--nproc_per_node=4', 'start_train.py', '--model_name', 'tgnet_fps', '--config_path', 'train_configs/tgnet_fps.py', '--experiment_name', 'TGNet_fps_GPU4', '--input_data_dir_path', 'path/for/preprocessed_data', '--train_data_split_txt_path', 'base_name_train_fold.txt', '--val_data_split_txt_path', 'base_name_val_fold.txt']
+[INFO] 2024-12-04 21:41:39,353 run: Using nproc_per_node=4.
+[INFO] 2024-12-04 21:41:39,353 api: Starting elastic_operator with launch configs:
+  entrypoint       : start_train.py
+  min_nodes        : 1
+  max_nodes        : 1
+  nproc_per_node   : 4
+  run_id           : none
+  rdzv_backend     : static
+  rdzv_endpoint    : 127.0.0.1:29500
+  rdzv_configs     : {'rank': 0, 'timeout': 900}
+  max_restarts     : 3
+  monitor_interval : 5
+  log_dir          : None
+  metrics_cfg      : {}
+
+[INFO] 2024-12-04 21:41:39,353 local_elastic_agent: log directory set to: /tmp/torchelastic_ctwfs_jr/none_i86r7xj9
+[INFO] 2024-12-04 21:41:39,354 api: [default] starting workers for entrypoint: python
+[INFO] 2024-12-04 21:41:39,354 api: [default] Rendezvous'ing worker group
+[INFO] 2024-12-04 21:41:39,354 static_tcp_rendezvous: Creating TCPStore as the c10d::Store implementation
+/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/elastic/utils/store.py:52: FutureWarning: This is an experimental API and will be changed in future.
+  warnings.warn(
+[INFO] 2024-12-04 21:41:39,355 api: [default] Rendezvous complete for workers. Result:
+  restart_count=0
+  master_addr=127.0.0.1
+  master_port=29500
+  group_rank=0
+  group_world_size=1
+  local_ranks=[0, 1, 2, 3]
+  role_ranks=[0, 1, 2, 3]
+  global_ranks=[0, 1, 2, 3]
+  role_world_sizes=[4, 4, 4, 4]
+  global_world_sizes=[4, 4, 4, 4]
+
+[INFO] 2024-12-04 21:41:39,355 api: [default] Starting worker group
+[INFO] 2024-12-04 21:41:39,355 __init__: Setting worker0 reply file to: /tmp/torchelastic_ctwfs_jr/none_i86r7xj9/attempt_0/0/error.json
+[INFO] 2024-12-04 21:41:39,355 __init__: Setting worker1 reply file to: /tmp/torchelastic_ctwfs_jr/none_i86r7xj9/attempt_0/1/error.json
+[INFO] 2024-12-04 21:41:39,355 __init__: Setting worker2 reply file to: /tmp/torchelastic_ctwfs_jr/none_i86r7xj9/attempt_0/2/error.json
+[INFO] 2024-12-04 21:41:39,355 __init__: Setting worker3 reply file to: /tmp/torchelastic_ctwfs_jr/none_i86r7xj9/attempt_0/3/error.json
+Traceback (most recent call last):
+  File "/data/701/ToothGroupNetwork-main/start_train.py", line 1, in <module>
+    from runner import runner
+  File "/data/701/ToothGroupNetwork-main/runner.py", line 1, in <module>
+    from trainer import Trainer
+  File "/data/701/ToothGroupNetwork-main/trainer.py", line 3, in <module>
+    from loss_meter import LossMeter
+  File "/data/701/ToothGroupNetwork-main/loss_meter.py", line 1, in <module>
+    import gen_utils as gu
+  File "/data/701/ToothGroupNetwork-main/gen_utils.py", line 5, in <module>
+    import matplotlib.pyplot as plt
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/matplotlib/__init__.py", line 159, in <module>
+    from . import _api, _version, cbook, _docstring, rcsetup
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/matplotlib/rcsetup.py", line 29, in <module>
+    from matplotlib._fontconfig_pattern import parse_fontconfig_pattern
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py", line 15, in <module>
+    from pyparsing import (
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/pyparsing/__init__.py", line 130, in <module>
+    from .exceptions import *
+  File "<frozen importlib._bootstrap>", line 1007, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 986, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 680, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 846, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 978, in get_code
+  File "<frozen importlib._bootstrap_external>", line 647, in _compile_bytecode
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/data/701/ToothGroupNetwork-main/start_train.py", line 1, in <module>
+    from runner import runner
+  File "/data/701/ToothGroupNetwork-main/runner.py", line 1, in <module>
+    from trainer import Trainer
+  File "/data/701/ToothGroupNetwork-main/trainer.py", line 3, in <module>
+    from loss_meter import LossMeter
+  File "/data/701/ToothGroupNetwork-main/loss_meter.py", line 1, in <module>
+    import gen_utils as gu
+  File "/data/701/ToothGroupNetwork-main/gen_utils.py", line 1, in <module>
+    import open3d as o3d
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/open3d/__init__.py", line 146, in <module>
+    import open3d.ml
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/open3d/ml/__init__.py", line 16, in <module>
+    from . import datasets
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/open3d/ml/datasets.py", line 15, in <module>
+    from open3d._ml3d.datasets import *
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/open3d/_ml3d/datasets/__init__.py", line 3, in <module>
+    from .semantickitti import SemanticKITTI
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/open3d/_ml3d/datasets/semantickitti.py", line 6, in <module>
+    from sklearn.neighbors import KDTree
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/sklearn/neighbors/__init__.py", line 15, in <module>
+    from ._nca import NeighborhoodComponentsAnalysis
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/sklearn/neighbors/_nca.py", line 23, in <module>
+    from ..decomposition import PCA
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/sklearn/decomposition/__init__.py", line 8, in <module>
+    from ._dict_learning import (
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/sklearn/decomposition/_dict_learning.py", line 22, in <module>
+    from ..linear_model import Lars, Lasso, LassoLars, orthogonal_mp_gram
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/sklearn/linear_model/__init__.py", line 43, in <module>
+    from ._ridge import Ridge, RidgeClassifier, RidgeClassifierCV, RidgeCV, ridge_regression
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py", line 382, in <module>
+    "alpha": [Interval(Real, 0, None, closed="left"), "array-like"],
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/sklearn/utils/_param_validation.py", line 438, in __init__
+    self.closed = closed
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/data/701/ToothGroupNetwork-main/start_train.py", line 1, in <module>
+    from runner import runner
+  File "/data/701/ToothGroupNetwork-main/runner.py", line 1, in <module>
+    from trainer import Trainer
+  File "/data/701/ToothGroupNetwork-main/trainer.py", line 3, in <module>
+    from loss_meter import LossMeter
+  File "/data/701/ToothGroupNetwork-main/loss_meter.py", line 1, in <module>
+    import gen_utils as gu
+  File "/data/701/ToothGroupNetwork-main/gen_utils.py", line 5, in <module>
+    import matplotlib.pyplot as plt
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/matplotlib/__init__.py", line 986, in <module>
+    defaultParams = rcsetup.defaultParams = {
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/matplotlib/__init__.py", line 988, in <dictcomp>
+    key: [(rcsetup._auto_backend_sentinel if key == "backend" else
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/run.py", line 637, in <module>
+    main()
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/run.py", line 629, in main
+    run(args)
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/run.py", line 621, in run
+    elastic_launch(
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 116, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 348, in wrapper
+    return f(*args, **kwargs)
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 238, in launch_agent
+    result = agent.run()
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/elastic/metrics/api.py", line 125, in wrapper
+    result = f(*args, **kwargs)
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/elastic/agent/server/api.py", line 700, in run
+    result = self._invoke_run(role)
+  File "/data/701/anaconda3/envs/TGNet/lib/python3.9/site-packages/torch/distributed/elastic/agent/server/api.py", line 828, in _invoke_run
+    time.sleep(monitor_interval)
+KeyboardInterrupt
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
